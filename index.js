@@ -4,6 +4,8 @@ class CountdownTimer {
     this.selector = selector;
     this.targetDate = new Date(targetDate);
     this.timer = this.timer.bind(this);
+    this.intervalId = null;
+    this.isActive = false;
   }
   timer() {
     const refs = {
@@ -22,8 +24,17 @@ class CountdownTimer {
     refs.secs.textContent = secs;
   }
   start() {
-    setInterval(this.timer, 1000);
+    if (this.isActive) {
+            return;
+    }
+    this.isActive = true;
+    this.intervalId = setInterval(this.timer, 1000);
   }
+  stop() {
+    clearInterval(this.intervalId);
+    this.isActive = false;
+  }
+  
   pad(value) {
     return String(value).padStart(2, "0");
   }
@@ -38,4 +49,11 @@ class CountdownTimer {
   }
 }
 const countdownTimer = new CountdownTimer("#timer-1", "2021 August 21 09:00");
-countdownTimer.start();
+// countdownTimer.start();
+
+const startBtn = document.querySelector('.startBtnJs');
+startBtn.addEventListener('click', ()=>{countdownTimer.start()});
+const stopBtn = document.querySelector('.stopBtnJs');
+stopBtn.addEventListener('click', ()=>{countdownTimer.stop()});
+// const clearBtn = document.querySelector('.clearBtnJs');
+// clearBtn.addEventListener('click', timer.clear.bind(this));
